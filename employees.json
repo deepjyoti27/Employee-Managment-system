@@ -1,0 +1,23 @@
+[
+    {
+        "type": "fulltimeemployee",
+        "id": "4567",
+        "name": "deep",
+        "department": "AI",
+        "monthly_salary": 20000000.0
+    },
+    {
+        "type": "fulltimeemployee",
+        "id": "234",
+        "name": "avika",
+        "department": "AI",
+        "monthly_salary": 10000000.0
+    },
+    {
+        "type": "fulltimeemployee",
+        "id": "76789",
+        "name": "komal",
+        "department": "AI",
+        "monthly_salary": 2000000.0
+    }
+]

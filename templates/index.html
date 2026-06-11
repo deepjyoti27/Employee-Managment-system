@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-5 d-flex justify-content-between align-items-end">
+    <div>
+        <h2 class="fw-bold mb-1" style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Intelligence Dashboard</h2>
+        <p class="text-muted mb-0">Overview of your workforce analytics</p>
+    </div>
+</div>
+
+<div class="row mb-5 g-4">
+    <div class="col-md-4">
+        <div class="glass-card p-4 h-100 position-relative overflow-hidden">
+            <div class="position-absolute opacity-10" style="right: -20px; bottom: -20px;">
+                <i class="bi bi-people-fill" style="font-size: 8rem; color: #6366f1;"></i>
+            </div>
+            <h6 class="text-uppercase text-muted fw-semibold letter-spacing-1">Total Employees</h6>
+            <h1 class="display-4 fw-bold mt-2">{{ employees|length }}</h1>
+            <p class="text-success mb-0 small"><i class="bi bi-arrow-up-right me-1"></i>Active headcount</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="glass-card p-4 h-100 position-relative overflow-hidden">
+            <div class="position-absolute opacity-10" style="right: -20px; bottom: -20px;">
+                <i class="bi bi-cash-stack" style="font-size: 8rem; color: #10b981;"></i>
+            </div>
+            <h6 class="text-uppercase text-muted fw-semibold letter-spacing-1">Monthly Payroll</h6>
+            <h1 class="display-5 fw-bold mt-2 text-success">${{ "{:,.2f}".format(total_payroll) }}</h1>
+            <p class="text-muted mb-0 small"><i class="bi bi-graph-up me-1"></i>Total compensation</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="glass-card p-4 h-100 position-relative overflow-hidden">
+            <div class="position-absolute opacity-10" style="right: -20px; bottom: -20px;">
+                <i class="bi bi-diagram-3-fill" style="font-size: 8rem; color: #f59e0b;"></i>
+            </div>
+            <h6 class="text-uppercase text-muted fw-semibold letter-spacing-1">Departments</h6>
+            <h1 class="display-4 fw-bold mt-2">{{ summary|length }}</h1>
+            <p class="text-muted mb-0 small"><i class="bi bi-building me-1"></i>Active business units</p>
+        </div>
+    </div>
+</div>
+
+<div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+    <h4 class="fw-semibold mb-0"><i class="bi bi-person-lines-fill me-2 text-primary"></i>Talent Directory</h4>
+    <form action="{{ url_for('index') }}" method="GET" class="d-flex" style="max-width: 400px; width: 100%;">
+        <div class="input-group glass-card overflow-hidden" style="border-radius: 50rem; padding: 2px;">
+            <input type="text" name="search" class="form-control border-0 bg-transparent shadow-none px-4" style="color: inherit;" placeholder="Search name, ID, dept, or role..." value="{{ search_query or '' }}">
+            {% if search_query %}
+            <a href="{{ url_for('index') }}" class="btn border-0 d-flex align-items-center text-muted text-decoration-none">
+                <i class="bi bi-x-circle-fill"></i>
+            </a>
+            {% endif %}
+            <button class="btn btn-primary rounded-pill px-4 ms-1" type="submit" style="background: var(--primary-gradient); border: none;">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-custom">
+        <thead>
+            <tr>
+                <th class="ps-4">Employee ID</th>
+                <th>Employee Info</th>
+                <th>Department</th>
+                <th>Role Category</th>
+                <th>Monthly Salary</th>
+                <th class="text-end pe-4">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emp in employees %}
+            <tr>
+                <td class="ps-4 fw-bold font-monospace text-muted">#{{ emp.employee_id }}</td>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold me-3" style="width: 40px; height: 40px;">
+                            {{ emp.name[0]|upper }}
+                        </div>
+                        <div>
+                            <div class="fw-semibold">{{ emp.name }}</div>
+                            <div class="small text-muted">Joined recently</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 px-3 py-2 rounded-pill">
+                        {{ emp.department }}
+                    </span>
+                </td>
+                <td>
+                    {% set emp_type = emp.__class__.__name__ %}
+                    {% if emp_type == 'FullTimeEmployee' %}
+                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2 rounded-pill">
+                            <i class="bi bi-briefcase-fill me-1"></i> Full-Time
+                        </span>
+                    {% elif emp_type == 'PartTimeEmployee' %}
+                        <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3 py-2 rounded-pill">
+                            <i class="bi bi-clock-fill me-1"></i> Part-Time
+                        </span>
+                    {% elif emp_type == 'Manager' %}
+                        <span class="badge" style="background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%); color: #8b5cf6; border: 1px solid rgba(139,92,246,0.3); padding: 8px 16px; border-radius: 50rem;">
+                            <i class="bi bi-star-fill me-1"></i> Manager
+                        </span>
+                    {% endif %}
+                </td>
+                <td class="fw-bold">${{ "{:,.2f}".format(emp.calculate_salary()) }}</td>
+                <td class="text-end pe-4">
+                    <a href="{{ url_for('update_employee', emp_id=emp.employee_id) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3 me-2" title="Edit">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                    <form action="{{ url_for('delete_employee', emp_id=emp.employee_id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to permanently delete this employee?');">
+                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3" title="Delete">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center py-5">
+                    <div class="text-muted">
+                        <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+                        No talent records found. <br>
+                        <a href="{{ url_for('add_employee') }}" class="btn btn-primary mt-3 rounded-pill px-4">Onboard New Employee</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if summary %}
+<div class="mt-5 mb-4">
+    <h4 class="fw-semibold"><i class="bi bi-pie-chart-fill me-2 text-info"></i>Department Analytics</h4>
+</div>
+<div class="row g-4 mb-5">
+    {% for dept, stats in summary.items() %}
+    <div class="col-md-3">
+        <div class="glass-card p-4 text-center">
+            <h6 class="text-uppercase text-muted fw-semibold mb-3">{{ dept }}</h6>
+            <h2 class="display-6 fw-bold mb-0 text-primary">{{ stats.count }}</h2>
+            <div class="small text-muted mb-3">Team Members</div>
+            <hr class="opacity-10">
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="small text-muted">Avg Salary</span>
+                <span class="fw-bold text-success">${{ "{:,.0f}".format(stats.avg_salary) }}</span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentOS AI - Employee Intelligence</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --glass-bg-light: rgba(255, 255, 255, 0.7);
+            --glass-bg-dark: rgba(30, 30, 40, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --bg-light: #f3f4f6;
+            --bg-dark: #111827;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            background-image: 
+                radial-gradient(at 40% 20%, hsla(258,100%,74%,0.15) 0px, transparent 50%),
+                radial-gradient(at 80% 0%, hsla(189,100%,56%,0.15) 0px, transparent 50%),
+                radial-gradient(at 0% 50%, hsla(355,100%,93%,0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            min-height: 100vh;
+        }
+
+        /* Dark Mode overrides */
+        [data-bs-theme="dark"] body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(at 40% 20%, hsla(258,100%,74%,0.1) 0px, transparent 50%),
+                radial-gradient(at 80% 0%, hsla(189,100%,56%,0.1) 0px, transparent 50%);
+            color: #f9fafb;
+        }
+
+        .glass-card {
+            background: var(--glass-bg-light);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.4s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-bs-theme="dark"] .glass-card {
+            background: var(--glass-bg-dark);
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            transition: background 0.4s ease;
+        }
+
+        [data-bs-theme="dark"] .navbar-custom {
+            background: rgba(17, 24, 39, 0.8) !important;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.5rem;
+        }
+
+        .btn-gradient {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: opacity 0.3s ease, transform 0.2s ease;
+        }
+        
+        .btn-gradient:hover {
+            opacity: 0.9;
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .table-custom {
+            border-collapse: separate;
+            border-spacing: 0 12px;
+            background: transparent;
+        }
+
+        .table-custom tr {
+            background: var(--glass-bg-light);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: background 0.4s ease;
+        }
+
+        [data-bs-theme="dark"] .table-custom tr {
+            background: var(--glass-bg-dark);
+        }
+
+        .table-custom td, .table-custom th {
+            border: none;
+            padding: 16px;
+            vertical-align: middle;
+        }
+
+        .table-custom th {
+            background: transparent;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        .table-custom tr td:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+        .table-custom tr td:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+
+        /* Theme Toggle Switch */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        .theme-switch {
+            display: inline-block;
+            height: 30px;
+            position: relative;
+            width: 54px;
+        }
+        .theme-switch input { display:none; }
+        .slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+            border-radius: 30px;
+        }
+        .slider:before {
+            background-color: #fff;
+            bottom: 3px;
+            content: "";
+            height: 24px;
+            left: 3px;
+            position: absolute;
+            transition: .4s;
+            width: 24px;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background: var(--primary-gradient); }
+        input:checked + .slider:before { transform: translateX(24px); }
+        .theme-icon { margin-left: 10px; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('index') }}">
+        <i class="bi bi-layers-fill me-2" style="-webkit-text-fill-color: initial; color: #6366f1;"></i>TalentOS AI
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link fw-medium" href="{{ url_for('index') }}">Dashboard</a>
+        </li>
+      </ul>
+      <div class="d-flex align-items-center gap-4">
+          <!-- Theme Toggle takes user input to change UI dynamically -->
+          <div class="theme-switch-wrapper">
+              <label class="theme-switch" for="checkbox">
+                  <input type="checkbox" id="checkbox" />
+                  <div class="slider"></div>
+              </label>
+              <i class="bi bi-moon-stars-fill theme-icon text-secondary" id="themeIcon"></i>
+          </div>
+          
+          <a class="btn-gradient text-decoration-none" href="{{ url_for('add_employee') }}">
+              <i class="bi bi-plus-lg me-1"></i> New Employee
+          </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container my-5 fade-in">
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show glass-card border-0 shadow-sm" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+    </div>
+
+    {% block content %}{% endblock %}
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Advanced Theme Toggle Logic (Takes user input to change UI)
+    const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+    const currentTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('themeIcon');
+
+    if (currentTheme) {
+        document.documentElement.setAttribute('data-bs-theme', currentTheme);
+        if (currentTheme === 'dark') {
+            toggleSwitch.checked = true;
+            themeIcon.classList.replace('bi-moon-stars-fill', 'bi-brightness-high-fill');
+            themeIcon.classList.replace('text-secondary', 'text-warning');
+        }
+    }
+
+    function switchTheme(e) {
+        if (e.target.checked) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            themeIcon.classList.replace('bi-moon-stars-fill', 'bi-brightness-high-fill');
+            themeIcon.classList.replace('text-secondary', 'text-warning');
+        } else {
+            document.documentElement.setAttribute('data-bs-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            themeIcon.classList.replace('bi-brightness-high-fill', 'bi-moon-stars-fill');
+            themeIcon.classList.replace('text-warning', 'text-secondary');
+        }    
+    }
+    toggleSwitch.addEventListener('change', switchTheme, false);
+</script>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>
